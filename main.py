@@ -265,31 +265,32 @@ async def score(
             "image_url": f"data:{photo_type};base64,{photo_base64}"
         })
 
-    response = client.responses.create(
-        model="gpt-4o-mini",
-        input=[
-            {
-                "role": "user",
-                "content": content
-            }
-        ],
-        temperature=0.4
-    )
-
-    text = response.output_text
-    text = text.replace("```json", "").replace("```", "").strip()
-
     try:
+        response = client.responses.create(
+            model="gpt-4o-mini",
+            input=[
+                {
+                    "role": "user",
+                    "content": content
+                }
+            ],
+            temperature=0.4
+        )
+
+        text = response.output_text
+        text = text.replace("```json", "").replace("```", "").strip()
+
         result = json.loads(text)
-    except Exception:
+
+    except Exception as e:
         result = {
             "score": 0,
             "rank": "ERROR",
             "good_points": [],
-            "bad_points": ["AIの返答形式が崩れました。もう一度試してください。"],
+            "bad_points": [f"エラー内容: {str(e)}"],
             "title_ideas": [],
-            "rewrite_example": text,
-            "girl_advice": "もう一度チェックしてみましょう。",
+            "rewrite_example": "",
+            "girl_advice": "設定か画像処理でエラーが出ています。",
             "staff_advice": "",
             "type_analysis": "",
             "image_advice": ""
