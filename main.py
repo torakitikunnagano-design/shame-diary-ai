@@ -370,6 +370,7 @@ async def score(
 
     db_status = "未実行"
     db_text = ""
+
     if supabase_url and supabase_key:
         requests.post(
         f"{supabase_url}/rest/v1/diary_scores",
@@ -394,8 +395,10 @@ async def score(
             "image_advice": result.get("image_advice")
     }
     )
+        
         db_status = response.status_code
         db_text = response.text
+
     else:
         db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
 
