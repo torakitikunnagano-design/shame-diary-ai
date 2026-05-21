@@ -141,6 +141,9 @@ a {{
 
 @app.get("/", response_class=HTMLResponse)
 def home():
+    print("DEBUG evaluation:", evaluation)
+    print("DEBUG score:", score)
+    print("DEBUG result:", result)
     return page_html("""
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
