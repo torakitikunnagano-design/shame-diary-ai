@@ -378,6 +378,8 @@ async def score(
             "image_advice": result.get("image_advice")
     }
     )
+        db_status = response_db.status_code
+        db_text = response_db.text
 
     return page_html(f"""
         <div class="badge">AI Result</div>
@@ -425,6 +427,10 @@ async def score(
                 <h2>画像アドバイス</h2>
                 <p>{escape(result.get("image_advice", ""))}</p>
             </div>
+
+            <p>DB保存結果: {db_status}</p>
+            <p>{escape(db_text)}</p>
+            
         </div>
 
         <div class="mini" style="margin-top:18px;">
