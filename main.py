@@ -330,6 +330,17 @@ async def score(
     good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
     bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
     title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
+    try:
+        score = int(str(result.get("score", 0)).replace("点", "").strip())
+    except Exception:
+        score = 0
+
+    if score >= 95:
+        evaluation = "良い"
+    elif score >= 85:
+        evaluation = "普通"
+    else:
+        evaluation = "改善"
 
     # supabase.table("diary_scores").insert({
     #     "cast_name": cast_name,
