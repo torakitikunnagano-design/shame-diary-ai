@@ -211,7 +211,7 @@ def home():
 @app.post("/score", response_class=HTMLResponse)
 async def score(
     cast_name: str = Form("未入力"),
-    diary: str = Form(...),
+    diary: str = Form(""),
     photo: UploadFile = File(None)
 ):
     
@@ -230,8 +230,10 @@ async def score(
     photo_base64 = None
     photo_type = "image/jpeg"
 
-    if photo and photo.filename:
+    if photo is not None and photo.filename:
         photo_bytes = await photo.read()
+
+    if len(photo_bytes) > 0:
         photo_base64 = base64.b64encode(photo_bytes).decode("utf-8")
         photo_type = photo.content_type or "image/jpeg"
 
