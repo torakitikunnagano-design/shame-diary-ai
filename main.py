@@ -446,9 +446,6 @@ async def score(
                 <p>{escape(result.get("image_advice", ""))}</p>
             </div>
 
-            <p>DB保存結果: {db_status}</p>
-            <p>{escape(db_text)}</p>
-
         </div>
 
         <div class="mini" style="margin-top:18px;">
