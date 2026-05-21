@@ -297,6 +297,14 @@ async def score(
         text = text.replace("```json", "").replace("```", "").strip()
 
         result = json.loads(text)
+        score = int(result.get("score", 0))
+
+        if score >= 95:
+            evaluation = "良い"
+        elif score >= 85:
+            evaluation = "普通"
+        else:
+            evaluation = "改善"
 
         if not photo_base64:
             result["image_advice"] = "画像未入力"
@@ -328,8 +336,7 @@ async def score(
         <p style="color:#ff9ad2;">キャスト名：{escape(cast_name)}</p>
 
         <div class="score-box">
-            <div class="score">{escape(str(result.get("score", 0)))}点</div>
-            <div class="rank">ランク {escape(str(result.get("rank", "-")))}</div>
+            <div class="score">{evaluation}</div>
             <p>文字数: {char_count}文字</p>
         </div>
 
