@@ -141,9 +141,6 @@ a {{
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    print("DEBUG evaluation:", evaluation)
-    print("DEBUG score:", score)
-    print("DEBUG result:", result)
     return page_html("""
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
@@ -372,7 +369,7 @@ async def score(
     db_text = ""
 
     if supabase_url and supabase_key:
-        requests.post(
+        response_db = requests.post(
         f"{supabase_url}/rest/v1/diary_scores",
         headers={
         "apikey": supabase_key,
@@ -396,8 +393,8 @@ async def score(
     }
     )
         
-        db_status = response.status_code
-        db_text = response.text
+        db_status = response_db
+        db_text = response_db
 
     else:
         db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
