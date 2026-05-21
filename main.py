@@ -435,12 +435,6 @@ async def score(
             <p>DB保存結果: {db_status}</p>
             <p>{escape(db_text)}</p>
 
-            <div class="mini" style="margin-top:18px;">
-    <h2>DB保存確認</h2>
-    <p>DB保存結果: {db_status}</p>
-    <p>{escape(db_text)}</p>
-</div>
-
         </div>
 
         <div class="mini" style="margin-top:18px;">
