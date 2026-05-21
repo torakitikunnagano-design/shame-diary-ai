@@ -211,10 +211,23 @@ def home():
 
 @app.post("/score", response_class=HTMLResponse)
 async def score(
-    cast_name: str = Form(...),
+    cast_name: str = Form("未入力"),
     diary: str = Form(...),
     photo: UploadFile = File(None)
 ):
+    
+    diary = diary.strip()
+    cast_name = cast_name.strip() or "未入力"
+
+    if not diary and (not photo or not photo.filename):
+        return page_html("""
+            div class = "badge">Error</div>
+            <h1>エラー</h1>
+            <p>本文か画像のどちらかを入力してください。</p>
+            <br>
+            <a href="/">← 戻る</a>
+            """)
+    
     photo_base64 = None
     photo_type = "image/jpeg"
 
@@ -223,6 +236,7 @@ async def score(
         photo_base64 = base64.b64encode(photo_bytes).decode("utf-8")
         photo_type = photo.content_type or "image/jpeg"
 
+#採点基準
     prompt = f"""
 あなたは写メ日記のAI教育スタッフです。
 女の子を傷つけず、売上につながるように優しく改善してください。
