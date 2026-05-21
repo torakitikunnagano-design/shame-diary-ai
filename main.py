@@ -240,6 +240,8 @@ async def score(
     prompt = f"""
 あなたは写メ日記のAI教育スタッフです。
 女の子を傷つけず、売上につながるように優しく改善してください。
+画像が存在しない場合は、
+画像アドバイスを「画像未入力」としてください。
 
 文章と画像を総合的に採点してください。
 
@@ -295,6 +297,9 @@ async def score(
         text = text.replace("```json", "").replace("```", "").strip()
 
         result = json.loads(text)
+
+        if not photo_base64:
+            result["image_advice"] = "画像未入力"
 
     except Exception as e:
         result = {
