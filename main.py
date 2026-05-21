@@ -2,12 +2,11 @@ import os
 import json
 import base64
 from html import escape
-
+import requests
 from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from openai import OpenAI
-
 load_dotenv()
 
 app = FastAPI()
@@ -328,6 +327,57 @@ async def score(
     good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
     bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
     title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
+
+    # supabase.table("diary_scores").insert({
+    #     "cast_name": cast_name,
+    #     "diary": diary,
+
+    #     "evaluation": evaluation,
+    #     "score": score,
+
+    #     "type_analysis": result.get("type_analysis"),
+
+    #     "good_points": result.get("good_points"),
+    #     "bad_points": result.get("bad_points"),
+
+    #     "title_ideas": result.get("title_ideas"),
+
+    #     "rewrite_example": result.get("rewrite_example"),
+
+    #     "girl_advice": result.get("girl_advice"),
+    #     "staff_advice": result.get("staff_advice"),
+
+    #     "image_advice": result.get("image_advice")
+    # }).execute()
+
+
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+    if supabase_url and supabase_key:
+        requests.post(
+        f"{supabase_url}/rest/v1/diary_scores",
+        headers={
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+        },
+        json={
+            "cast_name": cast_name,
+            "diary": diary,
+            "evaluation": evaluation,
+            "score": score,
+            "type_analysis": result.get("type_analysis"),
+            "good_points": result.get("good_points"),
+            "bad_points": result.get("bad_points"),
+            "title_ideas": result.get("title_ideas"),
+            "rewrite_example": result.get("rewrite_example"),
+            "girl_advice": result.get("girl_advice"),
+            "staff_advice": result.get("staff_advice"),
+            "image_advice": result.get("image_advice")
+    }
+    )
 
     return page_html(f"""
         <div class="badge">AI Result</div>
