@@ -212,7 +212,7 @@ def home():
 async def score(
     cast_name: str = Form("未入力"),
     diary: str = Form(""),
-    photo: UploadFile = File(None)
+    photo: UploadFile | None = File(default=None)
 ):
     
     diary = diary.strip()
@@ -230,10 +230,10 @@ async def score(
     photo_base64 = None
     photo_type = "image/jpeg"
 
-    if photo is not None and photo.filename:
+    if photo is not None:
         photo_bytes = await photo.read()
 
-    if len(photo_bytes) > 0:
+    if photo.filename and len(photo_bytes) > 0:
         photo_base64 = base64.b64encode(photo_bytes).decode("utf-8")
         photo_type = photo.content_type or "image/jpeg"
 
