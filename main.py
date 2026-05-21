@@ -354,6 +354,8 @@ async def score(
     supabase_url = os.getenv("SUPABASE_URL")
     supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
+    db_status = "未実行"
+    db_text = ""
     if supabase_url and supabase_key:
         requests.post(
         f"{supabase_url}/rest/v1/diary_scores",
@@ -378,8 +380,10 @@ async def score(
             "image_advice": result.get("image_advice")
     }
     )
-        db_status = response_db.status_code
-        db_text = response_db.text
+        db_status = response.status_code
+        db_text = response.text
+    else:
+        db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
 
     return page_html(f"""
         <div class="badge">AI Result</div>
@@ -430,7 +434,13 @@ async def score(
 
             <p>DB保存結果: {db_status}</p>
             <p>{escape(db_text)}</p>
-            
+
+            <div class="mini" style="margin-top:18px;">
+    <h2>DB保存確認</h2>
+    <p>DB保存結果: {db_status}</p>
+    <p>{escape(db_text)}</p>
+</div>
+
         </div>
 
         <div class="mini" style="margin-top:18px;">
