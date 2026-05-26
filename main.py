@@ -109,9 +109,9 @@ async def score(
     if photo is not None:
         photo_bytes = await photo.read()
 
-    if photo.filename and len(photo_bytes) > 0:
-        photo_base64 = base64.b64encode(photo_bytes).decode("utf-8")
-        photo_type = photo.content_type or "image/jpeg"
+        if photo.filename and len(photo_bytes) > 0:
+            photo_base64 = base64.b64encode(photo_bytes).decode("utf-8")
+            photo_type = photo.content_type or "image/jpeg"
 
 #採点基準
     prompt = f"""
@@ -289,8 +289,8 @@ async def score(
     }
     )
         
-        db_status = response_db
-        db_text = response_db
+        db_status = response_db.status_code
+        db_text = response_db.text
 
     else:
         db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
