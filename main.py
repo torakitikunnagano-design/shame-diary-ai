@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-from services.ai_service import analyze_diary
+from services.ai_services import analyze_diary
 
 from html import escape
 import requests
