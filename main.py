@@ -332,6 +332,7 @@ SNS向きか
         )
 
         text = response.output_text
+        print(text)
         text = text.replace("```json", "").replace("```", "").strip()
 
         result = json.loads(text)
