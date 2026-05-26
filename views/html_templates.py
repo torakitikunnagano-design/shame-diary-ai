@@ -56,6 +56,64 @@ button {{
     font-size:18px;
     font-weight:bold;
 }}
+.badge {{
+    display:inline-block;
+    background:rgba(255,77,166,.18);
+    color:#ff9ad2;
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:13px;
+}}
+
+h1 {{
+    font-size:34px;
+}}
+
+.sub {{
+    color:#cfc3d8;
+}}
+
+.score-box {{
+    text-align:center;
+    background:linear-gradient(135deg,#ff4da6,#7c3cff);
+    border-radius:24px;
+    padding:30px;
+    margin:25px 0;
+}}
+
+.score {{
+    font-size:72px;
+    font-weight:bold;
+}}
+
+.grid {{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}}
+
+.mini {{
+    background:#11111a;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:18px;
+    padding:20px;
+}}
+
+.mini h2 {{
+    color:#ff9ad2;
+    font-size:20px;
+}}
+
+.rewrite {{
+    white-space:pre-wrap;
+    line-height:1.8;
+}}
+
+a {{
+    color:#ff8ccc;
+    font-weight:bold;
+    text-decoration:none;
+}}
 </style>
 </head>
 <body>
