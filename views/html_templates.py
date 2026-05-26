@@ -28,6 +28,34 @@ body {{
     padding:30px;
     box-shadow:0 20px 60px rgba(0,0,0,.4);
 }}
+input, textarea {{
+    width:100%;
+    box-sizing:border-box;
+    background:#101018;
+    color:white;
+    border:1px solid #333;
+    border-radius:16px;
+    padding:16px;
+    font-size:16px;
+    margin-top:14px;
+}}
+
+textarea {{
+    height:240px;
+    line-height:1.7;
+}}
+
+button {{
+    margin-top:22px;
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:999px;
+    background:linear-gradient(90deg,#ff4da6,#ff7ac8);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+}}
 </style>
 </head>
 <body>
