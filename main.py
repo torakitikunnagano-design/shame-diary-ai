@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-from ai.service import  analyze_diary
+from services.ai_service import analyze_diary
 
 from html import escape
 import requests
@@ -115,159 +115,159 @@ async def score(
             photo_type = photo.content_type or "image/jpeg"
 
 #採点基準
-try:
-    result = analyze_diary(
-        cast_name=cast_name,
-        diary=diary,
-        photo_base64=photo_base64,
-        photo_type=photo_type
-    )
-
-except Exception as e:
-    result = {
-        "score": 0,
-        "rank": "ERROR",
-        "good_points": [],
-        "bad_points": [f"エラー内容: {str(e)}"],
-        "title_ideas": [],
-        "rewrite_example": "",
-        "girl_advice": "設定か画像処理でエラーが出ています。",
-        "staff_advice": "",
-        "type_analysis": "",
-        "image_advice": ""
-        }
-
-    char_count = len(diary)
-
-    good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
-    bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
-    title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
     try:
-        score = int(str(result.get("score", 0)).replace("点", "").strip())
-    except Exception:
-        score = 0
+        result = analyze_diary(
+            cast_name=cast_name,
+            diary=diary,
+            photo_base64=photo_base64,
+            photo_type=photo_type
+        )
 
-    if score >= 95:
-        evaluation = "良い"
-    elif score >= 85:
-        evaluation = "普通"
-    else:
-        evaluation = "改善"
+    except Exception as e:
+        result = {
+            "score": 0,
+            "rank": "ERROR",
+            "good_points": [],
+            "bad_points": [f"エラー内容: {str(e)}"],
+            "title_ideas": [],
+            "rewrite_example": "",
+            "girl_advice": "設定か画像処理でエラーが出ています。",
+            "staff_advice": "",
+            "type_analysis": "",
+            "image_advice": ""
+            }
 
-    # supabase.table("diary_scores").insert({
-    #     "cast_name": cast_name,
-    #     "diary": diary,
+        char_count = len(diary)
 
-    #     "evaluation": evaluation,
-    #     "score": score,
+        good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
+        bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
+        title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
+        try:
+            score = int(str(result.get("score", 0)).replace("点", "").strip())
+        except Exception:
+            score = 0
 
-    #     "type_analysis": result.get("type_analysis"),
+        if score >= 95:
+            evaluation = "良い"
+        elif score >= 85:
+            evaluation = "普通"
+        else:
+            evaluation = "改善"
 
-    #     "good_points": result.get("good_points"),
-    #     "bad_points": result.get("bad_points"),
+        # supabase.table("diary_scores").insert({
+        #     "cast_name": cast_name,
+        #     "diary": diary,
 
-    #     "title_ideas": result.get("title_ideas"),
+        #     "evaluation": evaluation,
+        #     "score": score,
 
-    #     "rewrite_example": result.get("rewrite_example"),
+        #     "type_analysis": result.get("type_analysis"),
 
-    #     "girl_advice": result.get("girl_advice"),
-    #     "staff_advice": result.get("staff_advice"),
+        #     "good_points": result.get("good_points"),
+        #     "bad_points": result.get("bad_points"),
 
-    #     "image_advice": result.get("image_advice")
-    # }).execute()
+        #     "title_ideas": result.get("title_ideas"),
+
+        #     "rewrite_example": result.get("rewrite_example"),
+
+        #     "girl_advice": result.get("girl_advice"),
+        #     "staff_advice": result.get("staff_advice"),
+
+        #     "image_advice": result.get("image_advice")
+        # }).execute()
 
 
-    supabase_url = os.getenv("SUPABASE_URL")
-    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+        supabase_url = os.getenv("SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-    db_status = "未実行"
-    db_text = ""
+        db_status = "未実行"
+        db_text = ""
 
-    if supabase_url and supabase_key:
-        response_db = requests.post(
-        f"{supabase_url}/rest/v1/diary_scores",
-        headers={
-        "apikey": supabase_key,
-        "Authorization": f"Bearer {supabase_key}",
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-        },
-        json={
-            "cast_name": cast_name,
-            "diary": diary,
-            "evaluation": evaluation,
-            "score": score,
-            "type_analysis": result.get("type_analysis"),
-            "good_points": result.get("good_points"),
-            "bad_points": result.get("bad_points"),
-            "title_ideas": result.get("title_ideas"),
-            "rewrite_example": result.get("rewrite_example"),
-            "girl_advice": result.get("girl_advice"),
-            "staff_advice": result.get("staff_advice"),
-            "image_advice": result.get("image_advice")
-    }
-    )
-        
-        db_status = response_db.status_code
-        db_text = response_db.text
+        if supabase_url and supabase_key:
+            response_db = requests.post(
+            f"{supabase_url}/rest/v1/diary_scores",
+            headers={
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+            },
+            json={
+                "cast_name": cast_name,
+                "diary": diary,
+                "evaluation": evaluation,
+                "score": score,
+                "type_analysis": result.get("type_analysis"),
+                "good_points": result.get("good_points"),
+                "bad_points": result.get("bad_points"),
+                "title_ideas": result.get("title_ideas"),
+                "rewrite_example": result.get("rewrite_example"),
+                "girl_advice": result.get("girl_advice"),
+                "staff_advice": result.get("staff_advice"),
+                "image_advice": result.get("image_advice")
+        }
+        )
+            
+            db_status = response_db.status_code
+            db_text = response_db.text
 
-    else:
-        db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
+        else:
+            db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
 
-    return page_html(f"""
-        <div class="badge">AI Result</div>
-        <h1>採点結果</h1>
+        return page_html(f"""
+            <div class="badge">AI Result</div>
+            <h1>採点結果</h1>
 
-        <p style="color:#ff9ad2;">キャスト名：{escape(cast_name)}</p>
+            <p style="color:#ff9ad2;">キャスト名：{escape(cast_name)}</p>
 
-        <div class="score-box">
-            <div class="score">{evaluation}</div>
-            <p>文字数: {char_count}文字</p>
-        </div>
-
-        <div class="grid">
-            <div class="mini">
-                <h2>良い点</h2>
-                <ul>{good_html}</ul>
+            <div class="score-box">
+                <div class="score">{evaluation}</div>
+                <p>文字数: {char_count}文字</p>
             </div>
 
-            <div class="mini">
-                <h2>改善点</h2>
-                <ul>{bad_html}</ul>
+            <div class="grid">
+                <div class="mini">
+                    <h2>良い点</h2>
+                    <ul>{good_html}</ul>
+                </div>
+
+                <div class="mini">
+                    <h2>改善点</h2>
+                    <ul>{bad_html}</ul>
+                </div>
+
+                <div class="mini">
+                    <h2>タイトル案</h2>
+                    <ul>{title_html}</ul>
+                </div>
+
+                <div class="mini">
+                    <h2>女の子への声かけ</h2>
+                    <p>{escape(result.get("girl_advice", ""))}</p>
+                </div>
+
+                <div class="mini">
+                    <h2>スタッフ向け指導</h2>
+                    <p>{escape(result.get("staff_advice", ""))}</p>
+                </div>
+
+                <div class="mini">
+                    <h2>タイプ分析</h2>
+                    <p>{escape(result.get("type_analysis", ""))}</p>
+                </div>
+
+                <div class="mini">
+                    <h2>画像アドバイス</h2>
+                    <p>{escape(result.get("image_advice", ""))}</p>
+                </div>
+
             </div>
 
-            <div class="mini">
-                <h2>タイトル案</h2>
-                <ul>{title_html}</ul>
+            <div class="mini" style="margin-top:18px;">
+                <h2>改善例</h2>
+                <div class="rewrite">{escape(result.get("rewrite_example", ""))}</div>
             </div>
 
-            <div class="mini">
-                <h2>女の子への声かけ</h2>
-                <p>{escape(result.get("girl_advice", ""))}</p>
-            </div>
-
-            <div class="mini">
-                <h2>スタッフ向け指導</h2>
-                <p>{escape(result.get("staff_advice", ""))}</p>
-            </div>
-
-            <div class="mini">
-                <h2>タイプ分析</h2>
-                <p>{escape(result.get("type_analysis", ""))}</p>
-            </div>
-
-            <div class="mini">
-                <h2>画像アドバイス</h2>
-                <p>{escape(result.get("image_advice", ""))}</p>
-            </div>
-
-        </div>
-
-        <div class="mini" style="margin-top:18px;">
-            <h2>改善例</h2>
-            <div class="rewrite">{escape(result.get("rewrite_example", ""))}</div>
-        </div>
-
-        <br>
-        <a href="/">← もう一度採点する</a>
-    """)
+            <br>
+            <a href="/">← もう一度採点する</a>
+        """)
