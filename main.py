@@ -187,9 +187,13 @@ async def score(
             temperature=0.4
         )
 
-        text = response.output_text
-        print(text)
+        text = response.output_text or ""
+        print("AI RESPONSE:", text)
+
         text = text.replace("```json", "").replace("```", "").strip()
+
+        if not text:
+            raise ValueError("AIの返答が空です。OpenAIの応答が取得できていません。")
 
         result = json.loads(text)
         score = int(result.get("score", 0))
