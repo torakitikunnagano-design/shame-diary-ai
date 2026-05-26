@@ -137,84 +137,61 @@ async def score(
             "image_advice": ""
             }
 
-        char_count = len(diary)
+    char_count = len(diary)
 
-        good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
-        bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
-        title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
-        try:
-            score = int(str(result.get("score", 0)).replace("点", "").strip())
-        except Exception:
-            score = 0
+    good_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("good_points", [])])
+    bad_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("bad_points", [])])
+    title_html = "".join([f"<li>{escape(x)}</li>" for x in result.get("title_ideas", [])])
+    try:
+        score = int(str(result.get("score", 0)).replace("点", "").strip())
+    except Exception:
+        score = 0
 
-        if score >= 95:
-            evaluation = "良い"
-        elif score >= 85:
-            evaluation = "普通"
-        else:
-            evaluation = "改善"
+    if score >= 95:
+        evaluation = "良い"
+    elif score >= 85:
+        evaluation = "普通"
+    else:
+        evaluation = "改善"
 
-        # supabase.table("diary_scores").insert({
-        #     "cast_name": cast_name,
-        #     "diary": diary,
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-        #     "evaluation": evaluation,
-        #     "score": score,
+    db_status = "未実行"
+    db_text = ""
 
-        #     "type_analysis": result.get("type_analysis"),
-
-        #     "good_points": result.get("good_points"),
-        #     "bad_points": result.get("bad_points"),
-
-        #     "title_ideas": result.get("title_ideas"),
-
-        #     "rewrite_example": result.get("rewrite_example"),
-
-        #     "girl_advice": result.get("girl_advice"),
-        #     "staff_advice": result.get("staff_advice"),
-
-        #     "image_advice": result.get("image_advice")
-        # }).execute()
-
-
-        supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-
-        db_status = "未実行"
-        db_text = ""
-
-        if supabase_url and supabase_key:
-            response_db = requests.post(
-            f"{supabase_url}/rest/v1/diary_scores",
-            headers={
-            "apikey": supabase_key,
-            "Authorization": f"Bearer {supabase_key}",
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal"
-            },
-            json={
-                "cast_name": cast_name,
-                "diary": diary,
-                "evaluation": evaluation,
-                "score": score,
-                "type_analysis": result.get("type_analysis"),
-                "good_points": result.get("good_points"),
-                "bad_points": result.get("bad_points"),
-                "title_ideas": result.get("title_ideas"),
-                "rewrite_example": result.get("rewrite_example"),
-                "girl_advice": result.get("girl_advice"),
-                "staff_advice": result.get("staff_advice"),
-                "image_advice": result.get("image_advice")
-        }
-        )
+    if supabase_url and supabase_key:
+        response_db = requests.post(
+        f"{supabase_url}/rest/v1/diary_scores",
+        headers={
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+        },
+        json={
+            "cast_name": cast_name,
+            "diary": diary,
+            "evaluation": evaluation,
+            "score": score,
+            "type_analysis": result.get("type_analysis"),
+            "good_points": result.get("good_points"),
+            "bad_points": result.get("bad_points"),
+            "title_ideas": result.get("title_ideas"),
+            "rewrite_example": result.get("rewrite_example"),
+            "girl_advice": result.get("girl_advice"),
+            "staff_advice": result.get("staff_advice"),
+            "image_advice": result.get("image_advice")
+    }
+)
             
-            db_status = response_db.status_code
-            db_text = response_db.text
+        db_status = response_db.status_code
+        db_text = response_db.text
 
-        else:
-            db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
+    else:
+        db_status = "SUPABASE_URL または UPABESE_KEY が未設定です。"
 
-        return page_html(f"""
+    return page_html(f"""
             <div class="badge">AI Result</div>
             <h1>採点結果</h1>
 
