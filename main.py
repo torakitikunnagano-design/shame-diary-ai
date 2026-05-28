@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from views.html_templates import page_html
 from views.history_view import history_html
+from views.home_view import dashboard_html
 
 load_dotenv()
 
@@ -55,6 +56,16 @@ def home(request: Request):
 
     if request.cookies.get("logged_in") != "true":
         return RedirectResponse("/login", status_code=302)
+
+    role = request.cookies.get("role", "cast")
+
+    return dashboard_html(role)
+
+@app.get("/score-form", response_class=HTMLResponse)
+def score_form(request: Request):
+    if request.cookies.get("logged_in") != "true":
+        return RedirectResponse("/login", status_code=302)
+
     return page_html("""
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
