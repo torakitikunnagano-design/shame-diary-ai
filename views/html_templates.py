@@ -114,6 +114,28 @@ a {{
     font-weight:bold;
     text-decoration:none;
 }}
+.app-grid {{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px;
+    margin-top:24px;
+}}
+
+.app-button {{
+    display:block;
+    text-align:center;
+    background:#11111a;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;
+    padding:24px 12px;
+    color:white;
+    text-decoration:none;
+}}
+
+.app-icon {{
+    font-size:42px;
+    margin-bottom:10px;
+}}
 </style>
 </head>
 <body>
