@@ -2,7 +2,7 @@ import os
 import json
 import base64
 from fastapi import Request
-from services.ai_services import analyze_diary
+from services.ai_service import analyze_diary
 from views.login_view import login_html, login_error_html
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
