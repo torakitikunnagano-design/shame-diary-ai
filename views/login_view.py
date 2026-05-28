@@ -7,6 +7,7 @@ def login_html():
         <h1>ログイン</h1>
 
         <form action="/login" method="post">
+            <input type="text" name="login_id" placeholder="ID">
             <input type="password" name="password" placeholder="パスワード">
             <button type="submit">ログイン</button>
         </form>

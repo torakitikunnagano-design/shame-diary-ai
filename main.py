@@ -27,11 +27,24 @@ def login_page():
     return login_html()
 
 @app.post("/login", response_class=HTMLResponse)
-def login(password: str = Form(...)):
+def login(login_id: str = Form(...), password: str = Form(...)):
 
-    if password == os.getenv("APP_PASSWORD"):
+    if (
+        login_id == os.getenv("STAFF_ID")
+        and password == os.getenv("STAFF_PASSWORD")
+    ):
         response = RedirectResponse(url="/", status_code=302)
         response.set_cookie(key="logged_in", value="true")
+        response.set_cookie(key="role", value="staff")
+        return response
+
+    if (
+        login_id == os.getenv("CAST_ID")
+        and password == os.getenv("CAST_PASSWORD")
+    ):
+        response = RedirectResponse(url="/", status_code=302)
+        response.set_cookie(key="logged_in", value="true")
+        response.set_cookie(key="role", value="cast")
         return response
 
     return login_error_html()
