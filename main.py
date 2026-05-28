@@ -23,6 +23,10 @@ app.add_middleware(
 )
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+@app.get("/login", response_class=HTMLResponse)
+def login_page():
+    return login_html()
+
 @app.post("/login")
 def login(password: str = Form(...)):
 
