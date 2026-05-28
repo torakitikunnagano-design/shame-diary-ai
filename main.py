@@ -1,8 +1,11 @@
 import os
 import json
 import base64
+from fastapi import Request
 from services.ai_services import analyze_diary
-
+from views.login_view import login_html, login_error_html
+from fastapi.responses import RedirectResponse
+from starlette.middleware.sessions import SessionMiddleware
 from html import escape
 import requests
 from fastapi import FastAPI, Form, UploadFile, File
@@ -14,10 +17,27 @@ from views.html_templates import page_html
 load_dotenv()
 
 app = FastAPI()
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET", "temporary-secret-key")
+)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+@app.post("/login")
+def login(password: str = Form(...)):
+
+    if password == os.getenv("APP_PASSWORD"):
+        response = RedirectResponse(url="/", status_code=302)
+        response.set_cookie(key="logged_in", value="true")
+        return response
+
+    return login_error_html()
+
 @app.get("/", response_class=HTMLResponse)
-def home():
+def home(request: Request):
+
+    if request.cookies.get("logged_in") != "true":
+        return RedirectResponse("/login", status_code=302)
     return page_html("""
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
