@@ -12,6 +12,7 @@ from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from openai import OpenAI
 from views.html_templates import page_html
+from views.history_view import history_html
 
 load_dotenv()
 
@@ -284,3 +285,48 @@ async def score(
             <br>
             <a href="/">← もう一度採点する</a>
         """)
+@app.get("/history", response_class=HTMLResponse)
+def history(request: Request):
+
+    if request.cookies.get("logged_in") != "true":
+        return RedirectResponse("/login", status_code=302)
+
+    if request.cookies.get("role") != "staff":
+        return RedirectResponse("/", status_code=302)
+
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+    rows_html = ""
+
+    if supabase_url and supabase_key:
+
+        response = requests.get(
+            f"{supabase_url}/rest/v1/diary_scores?select=*",
+            headers={
+                "apikey": supabase_key,
+                "Authorization": f"Bearer {supabase_key}"
+            }
+        )
+
+        data = response.json()
+
+        for row in reversed(data):
+
+            rows_html += f"""
+            <div class="mini" style="margin-bottom:18px;">
+
+                <h2>{row.get("cast_name", "未入力")}</h2>
+
+                <p><strong>評価:</strong> {row.get("evaluation", "")}</p>
+
+                <p><strong>タイプ:</strong> {row.get("type_analysis", "")}</p>
+
+                <div class="rewrite">
+                    {row.get("diary", "")}
+                </div>
+
+            </div>
+            """
+
+    return history_html(rows_html)
