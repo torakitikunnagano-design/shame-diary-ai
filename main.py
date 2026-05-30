@@ -80,7 +80,6 @@ def score_form(request: Request):
 
     return score_form_html(cast_name)
 
-
 @app.post("/score", response_class=HTMLResponse)
 async def score(
     cast_name: str = Form("未入力"),
