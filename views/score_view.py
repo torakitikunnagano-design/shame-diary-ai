@@ -6,13 +6,13 @@ def score_form_html(cast_name=""):
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
         <p class="sub">本文と画像を入れると、AIが総合的に採点します。</p>
+        <form action="/score" method="post" enctype="multipart/form-data">
         <input
             type="text"
             name="cast_name"
             value="__CAST_NAME__"
             placeholder="キャスト名"
         >
-        <form action="/score" method="post" enctype="multipart/form-data">
             <textarea
                 id="diary"
                 name="diary"
