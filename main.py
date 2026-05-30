@@ -223,13 +223,17 @@ def history(request: Request):
         for row in reversed(data):
             rows_html += f"""
             <div class="mini" style="margin-bottom:18px;">
-                <h2>{escape(str(row.get("cast_name", "未入力")))}</h2>
-                <p><strong>日時:</strong> {escape(str(row.get("created_at", "")))}</p>
-                <p><strong>評価:</strong> {escape(str(row.get("evaluation", "")))}</p>
-                <p><strong>タイプ:</strong> {escape(str(row.get("type_analysis", "")))}</p>
+
+                <p><strong>日時:</strong> {row.get("created_at", "")}</p>
+
+                <p><strong>評価:</strong> {row.get("evaluation", "")}</p>
+
+                <p><strong>タイプ:</strong> {row.get("type_analysis", "")}</p>
+
                 <div class="rewrite">
-                    {escape(str(row.get("diary", "")))}
+                    {row.get("diary", "")}
                 </div>
+
             </div>
             """
 
