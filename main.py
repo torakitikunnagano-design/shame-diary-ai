@@ -76,7 +76,9 @@ def score_form(request: Request):
     if request.cookies.get("logged_in") != "true":
         return RedirectResponse("/login", status_code=302)
 
-    return score_form_html()
+    cast_name = request.cookies.get("cast_name", "")
+
+    return score_form_html(cast_name)
 
 
 @app.post("/score", response_class=HTMLResponse)
