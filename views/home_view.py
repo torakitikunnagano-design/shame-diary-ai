@@ -2,13 +2,22 @@ from views.html_templates import page_html
 
 
 def dashboard_html(role):
-    history_button = ""
+    staff_buttons = ""
+    cast_buttons = ""
 
     if role == "staff":
-        history_button = """
+        staff_buttons = """
         <a class="app-button" href="/history">
             <div class="app-icon">📊</div>
-            <div>採点履歴</div>
+            <div>全履歴</div>
+        </a>
+        """
+
+    if role == "cast":
+        cast_buttons = """
+        <a class="app-button" href="/my-history">
+            <div class="app-icon">📖</div>
+            <div>自分の履歴</div>
         </a>
         """
 
@@ -23,21 +32,12 @@ def dashboard_html(role):
                 <div>AI採点</div>
             </a>
 
-            {history_button}
-
-            <a class="app-button" href="/login">
-                <div class="app-icon">🔐</div>
-                <div>ログイン</div>
-            </a>
+            {staff_buttons}
+            {cast_buttons}
 
             <a class="app-button" href="/logout">
                 <div class="app-icon">🚪</div>
                 <div>ログアウト</div>
-            </a>
-
-            <a class="app-button" href="/my-history">
-                 <div class="app-icon">📖</div>
-                 <div>自分の履歴</div>
             </a>
         </div>
     """)
