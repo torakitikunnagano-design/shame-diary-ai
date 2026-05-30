@@ -73,12 +73,41 @@ def home(request: Request):
     normal_count = 0
     improve_count = 0
 
-    stats_html = stats_card(
-        good_count,
-        normal_count,
-        improve_count
-    )
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+    cast_name = request.cookies.get("cast_name", "")
 
+    if supabase_url and supabase_key:
+        query_url = f"{supabase_url}/rest/v1/diary_scores?select=evaluation"
+
+        if role == "cast" and cast_name:
+            query_url += f"&cast_name=eq.{cast_name}"
+
+        response = requests.get(
+            query_url,
+            headers={
+                "apikey": supabase_key,
+                "Authorization": f"Bearer {supabase_key}"
+            }
+        )
+
+        data = response.json()
+
+        for row in data:
+            evaluation = row.get("evaluation")
+
+            if evaluation == "良い":
+                good_count += 1
+            elif evaluation == "普通":
+                normal_count += 1
+            elif evaluation == "改善":
+                improve_count += 1
+
+        stats_html = stats_card(
+            good_count,
+            normal_count,
+            improve_count
+        )
     return dashboard_html(role, stats_html)
 
 
