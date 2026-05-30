@@ -34,5 +34,10 @@ def dashboard_html(role):
                 <div class="app-icon">🚪</div>
                 <div>ログアウト</div>
             </a>
+
+            <a class="app-button" href="/my-history">
+                 <div class="app-icon">📖</div>
+                 <div>自分の履歴</div>
+            </a>
         </div>
     """)

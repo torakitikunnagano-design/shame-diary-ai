@@ -16,6 +16,7 @@ from views.history_view import history_html
 from views.home_view import dashboard_html
 from views.score_view import score_form_html
 from views.result_view import result_html
+from views.my_history_view import my_history_html
 
 load_dotenv()
 
@@ -230,3 +231,49 @@ def history(request: Request):
             """
 
     return history_html(rows_html)
+
+@app.get("/my-history", response_class=HTMLResponse)
+def my_history(request: Request):
+
+    if request.cookies.get("logged_in") != "true":
+        return RedirectResponse("/login", status_code=302)
+
+    cast_name = request.cookies.get("cast_name")
+
+    if not cast_name:
+        return RedirectResponse("/", status_code=302)
+
+    supabase_url = os.getenv("SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+    rows_html = ""
+
+    if supabase_url and supabase_key:
+
+        response = requests.get(
+            f"{supabase_url}/rest/v1/diary_scores?cast_name=eq.{cast_name}&select=*",
+            headers={
+                "apikey": supabase_key,
+                "Authorization": f"Bearer {supabase_key}"
+            }
+        )
+
+        data = response.json()
+
+        for row in reversed(data):
+
+            rows_html += f"""
+            <div class="mini" style="margin-bottom:18px;">
+
+                <p><strong>評価:</strong> {row.get("evaluation", "")}</p>
+
+                <p><strong>タイプ:</strong> {row.get("type_analysis", "")}</p>
+
+                <div class="rewrite">
+                    {row.get("diary", "")}
+                </div>
+
+            </div>
+            """
+
+    return my_history_html(rows_html)
