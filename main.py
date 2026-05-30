@@ -77,13 +77,13 @@ def score_form(request: Request):
 
     return score_form_html()
 
+
 @app.post("/score", response_class=HTMLResponse)
 async def score(
     cast_name: str = Form("未入力"),
     diary: str = Form(""),
     photo: UploadFile | None = File(default=None)
 ):
-
     diary = diary.strip()
     cast_name = cast_name.strip() or "未入力"
 
