@@ -17,6 +17,7 @@ from views.home_view import dashboard_html
 from views.score_view import score_form_html
 from views.result_view import result_html
 from views.my_history_view import my_history_html
+from views.stats_view import stats_card
 
 load_dotenv()
 
@@ -67,6 +68,9 @@ def home(request: Request):
         return RedirectResponse("/login", status_code=302)
 
     role = request.cookies.get("role", "cast")
+    good_count = 0
+    normal_count = 0
+    improve_count = 0
     return dashboard_html(role)
 
 
