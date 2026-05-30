@@ -29,5 +29,10 @@ def dashboard_html(role):
                 <div class="app-icon">🔐</div>
                 <div>ログイン</div>
             </a>
+
+            <a class="app-button" href="/logout">
+                <div class="app-icon">🚪</div>
+                <div>ログアウト</div>
+            </a>
         </div>
     """)

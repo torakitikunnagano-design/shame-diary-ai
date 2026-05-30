@@ -184,6 +184,14 @@ async def score(
     result
 )
 
+@app.get("/logout")
+def logout():
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie("logged_in")
+    response.delete_cookie("role")
+    response.delete_cookie("cast_name")
+    return response
+
 @app.get("/history", response_class=HTMLResponse)
 def history(request: Request):
 
