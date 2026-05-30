@@ -1,20 +1,13 @@
 from views.html_templates import page_html
 
-
 def score_form_html(cast_name=""):
-    return page_html("""
+
+    html = page_html("""
         <div class="badge">AI Diary Coach</div>
         <h1>写メ日記AI採点</h1>
         <p class="sub">本文と画像を入れると、AIが総合的に採点します。</p>
 
         <form action="/score" method="post" enctype="multipart/form-data">
-        <input
-            type="text"
-            name="cast_name"
-            value="{cast_name}"
-            placeholder="キャスト名"
-        >
-
             <textarea
                 id="diary"
                 name="diary"
@@ -72,3 +65,4 @@ def score_form_html(cast_name=""):
         }
         </script>
     """)
+    return html.replace("__CAST_NAME__", cast_name)
