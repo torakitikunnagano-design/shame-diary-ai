@@ -1,7 +1,7 @@
 from views.html_templates import page_html
 
 
-def dashboard_html(role):
+def dashboard_html(role, stats_html=""):
     staff_buttons = ""
     cast_buttons = ""
 
@@ -34,7 +34,7 @@ def dashboard_html(role):
 
             {staff_buttons}
             {cast_buttons}
-
+            {stats_html}
             <a class="app-button" href="/logout">
                 <div class="app-icon">🚪</div>
                 <div>ログアウト</div>

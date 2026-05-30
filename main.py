@@ -68,10 +68,18 @@ def home(request: Request):
         return RedirectResponse("/login", status_code=302)
 
     role = request.cookies.get("role", "cast")
+
     good_count = 0
     normal_count = 0
     improve_count = 0
-    return dashboard_html(role)
+
+    stats_html = stats_card(
+        good_count,
+        normal_count,
+        improve_count
+    )
+
+    return dashboard_html(role, stats_html)
 
 
 @app.get("/score-form", response_class=HTMLResponse)
