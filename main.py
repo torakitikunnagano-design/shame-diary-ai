@@ -96,11 +96,11 @@ def home(request: Request):
         for row in data:
             evaluation = row.get("evaluation")
 
-            if evaluation == "良い":
+            if evaluation in ["良い", "良"]:
                 good_count += 1
-            elif evaluation == "普通":
+            elif evaluation in ["普通","普"]:
                 normal_count += 1
-            elif evaluation == "改善":
+            elif evaluation in ["改善"]:
                 improve_count += 1
 
         stats_html = stats_card(
